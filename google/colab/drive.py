@@ -205,7 +205,7 @@ def _mount(
     problem_and_stopped = "Drive File Stream encountered a problem and has stopped"
     drive_exited = "drive EXITED"
 
-    d.sendline(
+    command = (
         "("
         f" {drive_dir}/drive"
         " --features="
@@ -229,6 +229,8 @@ def _mount(
         f' echo "{drive_exited}";'
         ") &"
     )
+    print(command)
+    d.sendline(command)
     d.expect(prompt)
     timeout_pattern = "QueryManager timed out"
     dfs_log = _os.path.join(_logs_dir(), "drive_fs.txt")
