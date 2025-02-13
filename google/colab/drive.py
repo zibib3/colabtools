@@ -95,7 +95,7 @@ def flush_and_unmount(timeout_ms=24 * 60 * 60 * 1000):
     raise ValueError('flush_and_unmount failed')
 
 
-def mount(mountpoint, force_remount=False, timeout_ms=120000, readonly=False):
+def mount(mountpoint, force_remount=False, timeout_ms=120000, readonly=False, additional_preferences = ''):
   """Mount your Google Drive at the specified mountpoint path."""
   return _mount(
       mountpoint,
@@ -103,6 +103,7 @@ def mount(mountpoint, force_remount=False, timeout_ms=120000, readonly=False):
       timeout_ms=timeout_ms,
       ephemeral=True,
       readonly=readonly,
+      additional_preferences=additional_preferences
   )
 
 
@@ -112,6 +113,7 @@ def _mount(
     timeout_ms=120000,
     ephemeral=False,
     readonly=False,
+    additional_preferences = ''
 ):
   """Internal helper to mount Google Drive."""
   if not _os.path.exists('/var/colab/hostname'):
@@ -239,7 +241,7 @@ def _mount(
       ' --preferences='
       f'trusted_root_certs_file_path:{drive_dir}/roots.pem,'
       'feature_flag_restart_seconds:129600,'
-      f'mount_point_path:{mountpoint}'
+      f'mount_point_path:{mountpoint}' + ',' + additional_preferences +
       ' 2>&1 |'
       ' grep --line-buffered -E'
       f' "{problem_and_stopped}|{domain_disabled_drivefs}";'
